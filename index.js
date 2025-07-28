@@ -22,8 +22,18 @@ global.addSlashes = require('slashes').addSlashes;
 global.stripSlashes = require('slashes').stripSlashes;
 global.md5 = require('md5');
 
+const auth_Mid = require("./middleware/auth_Mid");
+const auth_R = require('./Routers/authRouter');
+
+app.use('/', auth_R);
+
 app.get('/', (req, res) => {
-    res.render("index", {});
+    const token = req.cookies.authToken;
+    if (token) {
+        res.redirect('/tasks');
+    } else {
+        res.redirect('/login');
+    }
 });
 
 app.listen(port, () => {
