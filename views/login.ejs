@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="he">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>כניסה למערכת - מנהל משימות</title>
+</head>
+<body>
+    <div style="display: flex; justify-content: center; align-items: center; min-height: 100vh;">
+        <div style="background: white; padding: 40px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2); width: 100%; max-width: 400px;">
+            <h1 style="text-align: center; color: #333; margin-bottom: 30px;">כניסה למערכת</h1>
+            
+            <% if (error) { %>
+                <div style="background: #ff5252; color: white; padding: 15px; border-radius: 8px; margin-bottom: 20px; text-align: center;"><%= error %></div>
+            <% } %>
+            
+            <form method="POST" action="/login">
+                <div style="margin-bottom: 20px;">
+                    <label for="username" style="display: block; margin-bottom: 8px; font-weight: bold; color: #555;">שם משתמש:</label>
+                    <input type="text" id="username" name="username" required style="width: 100%; padding: 12px; border: 2px solid #e1e1e1; border-radius: 8px; font-size: 16px;">
+                </div>
+                
+                <div style="margin-bottom: 20px;">
+                    <label for="password" style="display: block; margin-bottom: 8px; font-weight: bold; color: #555;">סיסמה:</label>
+                    <input type="password" id="password" name="password" required style="width: 100%; padding: 12px; border: 2px solid #e1e1e1; border-radius: 8px; font-size: 16px;">
+                </div>
+                
+                <button type="submit" style="width: 100%; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 12px 30px; border: none; border-radius: 8px; font-size: 16px; cursor: pointer;">התחבר</button>
+            </form>
+            
+            <div style="text-align: center; margin-top: 20px;">
+                <p>עדיין אין לך חשבון? <a href="/register" style="color: #667eea; text-decoration: none;">הרשם כאן</a></p>
+            </div>
+        </div>
+    </div>
+</body>
+</html> 
