@@ -101,6 +101,14 @@ input:focus, select:focus, textarea:focus {
     font-size: 14px;
 }
 
+.btn-danger {
+    background: linear-gradient(135deg, #ff6b6b 0%, #ff5252 100%);
+}
+
+.btn-success {
+    background: linear-gradient(135deg, #4ecdc4 0%, #44a08d 100%);
+}
+
 .error {
     background: #ff5252;
     color: white;
@@ -119,6 +127,161 @@ input:focus, select:focus, textarea:focus {
     text-align: center;
 }
 
+.navbar {
+    background: rgba(255, 255, 255, 0.2);
+    padding: 15px 0;
+    margin-bottom: 30px;
+    border-radius: 10px;
+    backdrop-filter: blur(10px);
+}
+
+.navbar-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.navbar-brand {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: white;
+}
+
+.navbar-nav {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}
+
+.navbar-nav a {
+    color: white;
+    text-decoration: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    transition: background 0.3s;
+}
+
+.navbar-nav a:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.filters {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.task-item {
+    background: white;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 15px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s;
+}
+
+.task-item:hover {
+    transform: translateY(-2px);
+}
+
+.task-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 15px;
+}
+
+.task-description {
+    font-size: 1.1rem;
+    color: #333;
+    flex: 1;
+    margin-left: 15px;
+}
+
+.task-meta {
+    display: flex;
+    gap: 15px;
+    font-size: 0.9rem;
+    color: #666;
+}
+
+.category-badge {
+    padding: 4px 12px;
+    border-radius: 20px;
+    color: white;
+    font-size: 0.8rem;
+    font-weight: bold;
+}
+
+.task-completed {
+    opacity: 0.7;
+}
+
+.task-completed .task-description {
+    text-decoration: line-through;
+}
+
+.checkbox {
+    width: 20px;
+    height: 20px;
+}
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 30px;
+}
+
+.page-btn {
+    padding: 8px 16px;
+    border: 2px solid #667eea;
+    background: white;
+    color: #667eea;
+    text-decoration: none;
+    border-radius: 6px;
+    transition: all 0.3s;
+}
+
+.page-btn:hover, .page-btn.active {
+    background: #667eea;
+    color: white;
+}
+
+.category-item {
+    background: white;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+}
+
+.category-info {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.color-circle {
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.category-name {
+    font-size: 1.2rem;
+    color: #333;
+}
+
 .auth-links {
     text-align: center;
     margin-top: 20px;
@@ -133,20 +296,6 @@ input:focus, select:focus, textarea:focus {
     text-decoration: underline;
 }
 
-/* Task and Category Cards */
-.task-card, .category-card {
-    background: white;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-    transition: transform 0.2s;
-}
-
-.task-card:hover, .category-card:hover {
-    transform: translateY(-2px);
-}
-
-/* Responsive Design */
 @media (max-width: 768px) {
     .container {
         padding: 10px;
@@ -156,64 +305,22 @@ input:focus, select:focus, textarea:focus {
         padding: 20px;
     }
     
-    h1 {
-        font-size: 1.8rem;
+    .filters {
+        flex-direction: column;
+        align-items: stretch;
     }
     
-    .btn {
-        padding: 10px 20px;
-        font-size: 14px;
+    .task-meta {
+        flex-direction: column;
+        gap: 5px;
     }
     
-    .task-card, .category-card {
-        padding: 15px;
-    }
-}
-
-@media (max-width: 480px) {
-    .auth-card {
-        padding: 20px;
-        margin: 10px;
+    .navbar-content {
+        flex-direction: column;
+        gap: 15px;
     }
     
-    .main-card {
-        padding: 15px;
+    .navbar-nav {
+        justify-content: center;
     }
-    
-    .btn {
-        width: 100%;
-        margin-bottom: 10px;
-    }
-}
-
-/* Animation for task completion */
-.task-completed {
-    opacity: 0.7;
-    text-decoration: line-through;
-}
-
-/* Custom checkbox styling */
-input[type="checkbox"] {
-    width: 20px;
-    height: 20px;
-    cursor: pointer;
-}
-
-/* Form improvements */
-textarea {
-    min-height: 100px;
-    resize: vertical;
-}
-
-/* Color picker styling */
-input[type="color"] {
-    height: 40px;
-    padding: 5px;
-}
-
-/* Loading states */
-.btn:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-    transform: none;
 } 

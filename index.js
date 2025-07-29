@@ -23,22 +23,13 @@ global.stripSlashes = require('slashes').stripSlashes;
 global.md5 = require('md5');
 
 const auth_Mid = require("./middleware/auth_Mid");
-const auth_R = require('./Routers/authRouter');
+
 const tasks_R = require('./Routers/tasksRouter');
+app.use('/tasks',[auth_Mid.isLogged], tasks_R);
 const categories_R = require('./Routers/categoriesRouter');
-
+app.use('/categories',[auth_Mid.isLogged], categories_R);
+const auth_R = require('./Routers/authRouter');
 app.use('/', auth_R);
-app.use('/', tasks_R);
-app.use('/', categories_R);
-
-// Apply authentication middleware to protected routes
-app.get('/tasks', auth_Mid.isLogged);
-app.get('/tasks/new', auth_Mid.isLogged);
-app.post('/tasks', auth_Mid.isLogged);
-app.post('/tasks/toggle/:id', auth_Mid.isLogged);
-app.get('/categories', auth_Mid.isLogged);
-app.post('/categories', auth_Mid.isLogged);
-app.get('/categories/delete/:id', auth_Mid.isLogged);
 
 app.get('/', (req, res) => {
     const token = req.cookies.authToken;
