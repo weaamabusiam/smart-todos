@@ -3,115 +3,116 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>משימות - מנהל משימות</title>
+    <title>רשימת משימות - מנהל משימות</title>
     <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
+    <nav class="navbar">
+        <div class="navbar-content">
+            <div class="navbar-brand">מנהל משימות - <%= username %></div>
+            <div class="navbar-nav">
+                <a href="/tasks">משימות</a>
+                <a href="/categories">קטגוריות</a>
+                <a href="/tasks/new" class="btn btn-small">משימה חדשה</a>
+                <a href="/logout">התנתק</a>
+            </div>
+        </div>
+    </nav>
+
     <div class="container">
         <div class="main-card">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
-                <h1>המשימות שלי</h1>
+            <h2>רשימת המשימות שלי</h2>
+            
+            <div class="filters">
                 <div>
-                    <a href="/tasks/new" class="btn btn-small">משימה חדשה</a>
-                    <a href="/categories" class="btn btn-small">קטגוריות</a>
-                    <a href="/logout" class="btn btn-small" style="background: #ff5252;">התנתק</a>
+                    <label for="filter">סינון לפי סטטוס:</label>
+                    <select id="filter" name="filter">
+                        <option value="all" <% if (filter === 'all') { %>selected<% } %>>הכל</option>
+                        <option value="incomplete" <% if (filter === 'incomplete') { %>selected<% } %>>לא הושלמו</option>
+                        <option value="completed" <% if (filter === 'completed') { %>selected<% } %>>הושלמו</option>
+                    </select>
                 </div>
+                
+                <div>
+                    <label for="category">סינון לפי קטגוריה:</label>
+                    <select id="category" name="category">
+                        <option value="all">כל הקטגוריות</option>
+                        <% for (var i = 0; i < categories.length; i++) { %>
+                            <option value="<%= categories[i].id %>" <% if (selectedCategory == categories[i].id) { %>selected<% } %>>
+                                <%= categories[i].name %>
+                            </option>
+                        <% } %>
+                    </select>
+                </div>
+                
+                <button type="button" class="btn" onclick="document.getElementById('filterForm').submit()">סנן</button>
             </div>
             
-            <% if (error) { %>
-                <div class="error"><%= error %></div>
-            <% } %>
-            
-            <% if (message) { %>
-                <div class="message"><%= message %></div>
-            <% } %>
-            
-            <!-- Filters -->
-            <form method="GET" action="/tasks" style="margin-bottom: 30px;">
-                <div style="display: flex; gap: 15px; align-items: end;">
-                    <div style="flex: 1;">
-                        <label for="category">קטגוריה:</label>
-                        <select name="category" id="category">
-                            <option value="all">כל הקטגוריות</option>
-                            <% for (let i = 0; i < categories.length; i++) { %>
-                                <option value="<%= categories[i].id %>" <% if (req.query.category == categories[i].id) { %>selected<% } %>>
-                                    <%= categories[i].name %>
-                                </option>
-                            <% } %>
-                        </select>
-                    </div>
-                    <div style="flex: 1;">
-                        <label for="status">סטטוס:</label>
-                        <select name="status" id="status">
-                            <option value="all">כל המשימות</option>
-                            <option value="pending" <% if (req.query.status == 'pending') { %>selected<% } %>>ממתינות</option>
-                            <option value="completed" <% if (req.query.status == 'completed') { %>selected<% } %>>הושלמו</option>
-                        </select>
-                    </div>
-                    <div>
-                        <button type="submit" class="btn">סנן</button>
-                    </div>
-                </div>
+            <form id="filterForm" method="GET" action="/tasks">
+                <input type="hidden" name="filter" id="filterInput">
+                <input type="hidden" name="category" id="categoryInput">
             </form>
             
-            <!-- Tasks List -->
-            <div style="display: grid; gap: 15px;">
-                <% for (let i = 0; i < tasks.length; i++) { %>
-                    <div style="background: white; padding: 20px; border-radius: 10px; border-left: 5px solid <%= tasks[i].category_color || '#007bff' %>; box-shadow: 0 2px 10px rgba(0,0,0,0.1); <%= tasks[i].completed ? 'opacity: 0.7;' : '' %>">
-                        <div style="display: flex; justify-content: space-between; align-items: start;">
-                            <div style="flex: 1;">
-                                <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
-                                    <input type="checkbox" 
-                                           id="task-<%= tasks[i].id %>" 
-                                           <%= tasks[i].completed ? 'checked' : '' %>
-                                           onchange="toggleTask(<%= tasks[i].id %>, this.checked)"
-                                           style="width: 20px; height: 20px;">
-                                    <label for="task-<%= tasks[i].id %>" style="font-weight: bold; font-size: 18px; <%= tasks[i].completed ? 'text-decoration: line-through;' : '' %>">
-                                        <%= tasks[i].description %>
-                                    </label>
-                                </div>
-                                <div style="color: #666; font-size: 14px;">
-                                    <strong>קטגוריה:</strong> <%= tasks[i].category_name || 'ללא קטגוריה' %> | 
-                                    <strong>תאריך יעד:</strong> <%= new Date(tasks[i].target_date).toLocaleDateString('he-IL') %>
-                                </div>
-                            </div>
+            <% if (tasks.length === 0) { %>
+                <div style="text-align: center; padding: 40px; color: #666;">
+                    <h3>אין משימות להציג</h3>
+                    <p>לחץ על "משימה חדשה" כדי להתחיל</p>
+                </div>
+            <% } else { %>
+                <% for (var i = 0; i < tasks.length; i++) { %>
+                    <% var task = tasks[i]; %>
+                    <div class="task-item <% if (task.completed) { %>task-completed<% } %>">
+                        <div class="task-header">
+                            <form method="POST" action="/tasks/toggle/<%= task.id %>" style="display: inline;">
+                                <input type="checkbox" class="checkbox" 
+                                       <% if (task.completed) { %>checked<% } %>
+                                       onchange="this.form.submit()">
+                            </form>
+                            <div class="task-description"><%= task.description %></div>
+                            <span class="category-badge" style="background-color: <%= task.category_color %>;">
+                                <%= task.category_name %>
+                            </span>
+                        </div>
+                        <div class="task-meta">
+                            <span>תאריך יעד: <%= new Date(task.target_date).toLocaleDateString('he-IL') %></span>
+                            <span>נוצר: <%= new Date(task.created_at).toLocaleDateString('he-IL') %></span>
                         </div>
                     </div>
                 <% } %>
-                
-                <% if (tasks.length === 0) { %>
-                    <div style="text-align: center; padding: 40px; color: #666;">
-                        <h3>אין משימות עדיין</h3>
-                        <p>הוסף משימה ראשונה כדי להתחיל</p>
-                        <a href="/tasks/new" class="btn">הוסף משימה</a>
-                    </div>
-                <% } %>
-            </div>
+            <% } %>
+            
+            <% if (totalPages > 1) { %>
+                <div class="pagination">
+                    <% if (currentPage > 1) { %>
+                        <a href="?page=<%= currentPage - 1 %>&filter=<%= filter %>&category=<%= selectedCategory %>" 
+                           class="page-btn">הקודם</a>
+                    <% } %>
+                    
+                    <% for (var i = 1; i <= totalPages; i++) { %>
+                        <a href="?page=<%= i %>&filter=<%= filter %>&category=<%= selectedCategory %>" 
+                           class="page-btn <% if (i === currentPage) { %>active<% } %>"><%= i %></a>
+                    <% } %>
+                    
+                    <% if (currentPage < totalPages) { %>
+                        <a href="?page=<%= currentPage + 1 %>&filter=<%= filter %>&category=<%= selectedCategory %>" 
+                           class="page-btn">הבא</a>
+                    <% } %>
+                </div>
+            <% } %>
         </div>
     </div>
-    
+
     <script>
-        function toggleTask(taskId, completed) {
-            fetch('/tasks/toggle/' + taskId, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ completed: completed })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    location.reload();
-                } else {
-                    alert('שגיאה בעדכון המשימה');
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('שגיאה בעדכון המשימה');
-            });
+        function applyFilters() {
+            var filter = document.getElementById('filter').value;
+            var category = document.getElementById('category').value;
+            document.getElementById('filterInput').value = filter;
+            document.getElementById('categoryInput').value = category;
+            document.getElementById('filterForm').submit();
         }
+        
+        document.getElementById('filter').onchange = applyFilters;
+        document.getElementById('category').onchange = applyFilters;
     </script>
 </body>
 </html> 

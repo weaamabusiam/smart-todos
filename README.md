@@ -16,6 +16,7 @@
 - **Backend**: Node.js + Express.js
 - **Database**: MySQL2
 - **Views**: EJS Templates
+- **Architecture**: Server-Side Rendering (SSR)
 - **JWT tokens** לאימות
 - **Cookies** לשמירת הטוקנים
 - **MD5** להצפנת סיסמאות

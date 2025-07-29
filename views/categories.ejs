@@ -7,64 +7,62 @@
     <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
+    <nav class="navbar">
+        <div class="navbar-content">
+            <div class="navbar-brand">מנהל משימות - <%= username %></div>
+            <div class="navbar-nav">
+                <a href="/tasks">משימות</a>
+                <a href="/categories">קטגוריות</a>
+                <a href="/tasks/new" class="btn btn-small">משימה חדשה</a>
+                <a href="/logout">התנתק</a>
+            </div>
+        </div>
+    </nav>
+
     <div class="container">
         <div class="main-card">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
-                <h1>ניהול קטגוריות</h1>
-                <div>
-                    <a href="/tasks" class="btn btn-small">חזור למשימות</a>
-                    <a href="/logout" class="btn btn-small" style="background: #ff5252;">התנתק</a>
-                </div>
-            </div>
-            
-            <% if (error) { %>
-                <div class="error"><%= error %></div>
-            <% } %>
+            <h2>ניהול קטגוריות</h2>
             
             <% if (message) { %>
                 <div class="message"><%= message %></div>
             <% } %>
             
-            <form method="POST" action="/categories" style="margin-bottom: 30px;">
+            <form method="POST" action="/categories/new" style="margin-bottom: 30px;">
                 <div style="display: flex; gap: 15px; align-items: end;">
-                    <div style="flex: 1;">
-                        <label for="name">שם קטגוריה:</label>
+                    <div class="form-group" style="flex: 1;">
+                        <label for="name">שם הקטגוריה:</label>
                         <input type="text" id="name" name="name" required>
                     </div>
-                    <div style="width: 120px;">
+                    <div class="form-group">
                         <label for="color">צבע:</label>
-                        <input type="color" id="color" name="color" value="#007bff">
+                        <input type="color" id="color" name="color" value="#007bff" 
+                               style="width: 60px; height: 44px; padding: 4px;">
                     </div>
-                    <div>
-                        <button type="submit" class="btn">הוסף קטגוריה</button>
-                    </div>
+                    <button type="submit" class="btn">הוסף קטגוריה</button>
                 </div>
             </form>
             
-            <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px;">
-                <% for (let i = 0; i < categories.length; i++) { %>
-                    <div style="background: white; padding: 20px; border-radius: 10px; border-left: 5px solid <%= categories[i].color %>; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
-                        <div style="display: flex; justify-content: space-between; align-items: center;">
-                            <h3 style="margin: 0; color: #333;"><%= categories[i].name %></h3>
-                            <a href="/categories/delete/<%= categories[i].id %>" 
-                               onclick="return confirm('האם אתה בטוח שברצונך למחוק קטגוריה זו?')"
-                               style="background: #ff5252; color: white; padding: 5px 10px; border-radius: 5px; text-decoration: none; font-size: 12px;">
-                                מחק
-                            </a>
+            <% if (categories.length === 0) { %>
+                <div style="text-align: center; padding: 40px; color: #666;">
+                    <h3>אין קטגוריות עדיין</h3>
+                    <p>צור קטגוריה ראשונה כדי להתחיל לנהל משימות</p>
+                </div>
+            <% } else { %>
+                <% for (var i = 0; i < categories.length; i++) { %>
+                    <% var category = categories[i]; %>
+                    <div class="category-item">
+                        <div class="category-info">
+                            <span class="color-circle" style="background-color: <%= category.color %>;"></span>
+                            <span class="category-name"><%= category.name %></span>
                         </div>
-                        <div style="margin-top: 10px; font-size: 14px; color: #666;">
-                            נוצרה ב: <%= new Date(categories[i].created_at).toLocaleDateString('he-IL') %>
-                        </div>
+                        <form method="POST" action="/categories/delete/<%= category.id %>" 
+                              onsubmit="return confirm('האם אתה בטוח שברצונך למחוק את הקטגוריה?')" 
+                              style="display: inline;">
+                            <button type="submit" class="btn btn-danger btn-small">מחק</button>
+                        </form>
                     </div>
                 <% } %>
-                
-                <% if (categories.length === 0) { %>
-                    <div style="grid-column: 1 / -1; text-align: center; padding: 40px; color: #666;">
-                        <h3>אין קטגוריות עדיין</h3>
-                        <p>הוסף קטגוריה ראשונה כדי להתחיל</p>
-                    </div>
-                <% } %>
-            </div>
+            <% } %>
         </div>
     </div>
 </body>
