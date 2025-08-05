@@ -13,7 +13,6 @@
             <div class="navbar-nav">
                 <a href="/tasks">משימות</a>
                 <a href="/categories">קטגוריות</a>
-                <a href="/tasks/new" class="btn btn-small">משימה חדשה</a>
                 <a href="/logout">התנתק</a>
             </div>
         </div>
@@ -22,6 +21,14 @@
     <div class="container">
         <div class="main-card">
             <h2>רשימת המשימות שלי</h2>
+            
+            <% if (typeof message !== 'undefined' && message) { %>
+                <div class="message"><%= message %></div>
+            <% } %>
+            
+            <div style="display: flex; justify-content: flex-end; align-items: center; margin-bottom: 20px;">
+                <a href="/tasks/new" class="btn">צור משימה חדשה</a>
+            </div>
             
             <div class="filters">
                 <div>
@@ -44,8 +51,6 @@
                         <% } %>
                     </select>
                 </div>
-                
-                <button type="button" class="btn" onclick="document.getElementById('filterForm').submit()">סנן</button>
             </div>
             
             <form id="filterForm" method="GET" action="/tasks">
@@ -66,14 +71,22 @@
                             <form method="POST" action="/tasks/toggle/<%= task.id %>" style="display: inline;">
                                 <input type="checkbox" class="checkbox" 
                                        <% if (task.completed) { %>checked<% } %>
-                                       onchange="this.form.submit()">
+                                       onchange="this.form.submit()"
+                                       style="width: 18px; height: 18px; margin-left: 15px;">
                             </form>
-                            <div class="task-description"><%= task.description %></div>
+                            <div class="task-description" style="margin-right: 1px;"><%= task.description %></div>
+                            <div style="display: flex; gap: 10px;">
+                                <a href="/tasks/edit/<%= task.id %>" class="btn btn-small">ערוך</a>
+                                <form method="POST" action="/tasks/delete/<%= task.id %>" style="display: inline;" 
+                                      onsubmit="return confirm('האם אתה בטוח שברצונך למחוק משימה זו?')">
+                                    <button type="submit" class="btn btn-danger btn-small">מחק</button>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="task-meta">
                             <span class="category-badge" style="background-color: <%= task.category_color %>;">
                                 <%= task.category_name %>
                             </span>
-                        </div>
-                        <div class="task-meta">
                             <span>תאריך יעד: <%= new Date(task.target_date).toLocaleDateString('he-IL') %></span>
                             <span>נוצר: <%= new Date(task.created_at).toLocaleDateString('he-IL') %></span>
                         </div>

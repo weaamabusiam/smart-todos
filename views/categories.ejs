@@ -13,7 +13,6 @@
             <div class="navbar-nav">
                 <a href="/tasks">משימות</a>
                 <a href="/categories">קטגוריות</a>
-                <a href="/tasks/new" class="btn btn-small">משימה חדשה</a>
                 <a href="/logout">התנתק</a>
             </div>
         </div>
@@ -28,7 +27,7 @@
             <% } %>
             
             <form method="POST" action="/categories/new" style="margin-bottom: 30px;">
-                <div style="display: flex; gap: 15px; align-items: end;">
+                <div style="display: flex; gap: 15px; align-items: center;">
                     <div class="form-group" style="flex: 1;">
                         <label for="name">שם הקטגוריה:</label>
                         <input type="text" id="name" name="name" required>
@@ -55,11 +54,14 @@
                             <span class="color-circle" style="background-color: <%= category.color %>;"></span>
                             <span class="category-name"><%= category.name %></span>
                         </div>
-                        <form method="POST" action="/categories/delete/<%= category.id %>" 
-                              onsubmit="return confirm('האם אתה בטוח שברצונך למחוק את הקטגוריה?')" 
-                              style="display: inline;">
-                            <button type="submit" class="btn btn-danger btn-small">מחק</button>
-                        </form>
+                        <div style="display: flex; gap: 10px;">
+                            <a href="/categories/edit/<%= category.id %>" class="btn btn-small">ערוך</a>
+                            <form method="POST" action="/categories/delete/<%= category.id %>" 
+                                  onsubmit="return confirm('האם אתה בטוח שברצונך למחוק את הקטגוריה?')" 
+                                  style="display: inline;">
+                                <button type="submit" class="btn btn-danger btn-small">מחק</button>
+                            </form>
+                        </div>
                     </div>
                 <% } %>
             <% } %>

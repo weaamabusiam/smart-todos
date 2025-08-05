@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="he">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>עריכת קטגוריה - מנהל משימות</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-content">
+            <div class="navbar-brand">מנהל משימות - <%= username %></div>
+            <div class="navbar-nav">
+                <a href="/tasks">משימות</a>
+                <a href="/categories">קטגוריות</a>
+                <a href="/logout">התנתק</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="main-card">
+            <h2>עריכת קטגוריה</h2>
+            
+            <% if (error) { %>
+                <div class="error"><%= error %></div>
+            <% } %>
+            
+            <form method="POST" action="/categories/edit/<%= category.id %>">
+                <div class="form-group">
+                    <label for="name">שם הקטגוריה:</label>
+                    <input type="text" id="name" name="name" value="<%= category.name %>" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="color">צבע:</label>
+                    <input type="color" id="color" name="color" value="<%= category.color %>" 
+                           style="width: 60px; height: 44px; padding: 4px;">
+                </div>
+                
+                <div style="display: flex; gap: 15px; margin-top: 20px;">
+                    <button type="submit" class="btn btn-success">שמור שינויים</button>
+                    <a href="/categories" class="btn" style="text-decoration: none;">ביטול</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html> 

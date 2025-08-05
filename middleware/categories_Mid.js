@@ -46,8 +46,43 @@ async function DeleteCategory(req, res, next) {
     });
 }
 
+async function GetCategoryById(req, res, next) {
+    let query = "SELECT * FROM categories WHERE id = " + req.params.id + " AND user_id = " + req.user.userId;
+    global.db_pool.execute(query, (err, categories) => {
+        if (err || categories.length === 0) {
+            req.error = 'קטגוריה לא נמצאה';
+            return next();
+        }
+        req.category_data = categories[0];
+        next();
+    });
+}
+
+async function UpdateCategory(req, res, next) {
+    let name = req.body.name;
+    let color = req.body.color;
+    
+    if (!name) {
+        req.error = 'שם הקטגוריה הוא שדה חובה';
+        return next();
+    }
+    
+    let cleanName = global.addSlashes(name);
+    
+    let query = "UPDATE categories SET name = '" + cleanName + "', color = '" + (color || '#007bff') + "' WHERE id = " + req.params.id + " AND user_id = " + req.user.userId;
+    global.db_pool.execute(query, (err) => {
+        if (err) {
+            console.error(err);
+            req.error = 'שגיאה בעדכון הקטגוריה';
+        }
+        next();
+    });
+}
+
 module.exports = {
     GetAllCategories,
     AddCategory,
-    DeleteCategory
+    DeleteCategory,
+    GetCategoryById,
+    UpdateCategory
 }; 
