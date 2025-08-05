@@ -86,8 +86,64 @@ async function ToggleTask(req, res, next) {
     });
 }
 
+async function DeleteTask(req, res, next) {
+    let query = "DELETE FROM tasks WHERE id = " + req.params.id + " AND user_id = " + req.user.userId;
+    global.db_pool.execute(query, (err) => {
+        if (err) {
+            console.error(err);
+        }
+        next();
+    });
+}
+
+async function GetTaskById(req, res, next) {
+    let query = "SELECT t.*, c.name as category_name, c.color as category_color ";
+    query += "FROM tasks t ";
+    query += "JOIN categories c ON t.category_id = c.id ";
+    query += "WHERE t.id = " + req.params.id + " AND t.user_id = " + req.user.userId;
+    
+    global.db_pool.execute(query, (err, tasks) => {
+        if (err || tasks.length === 0) {
+            req.error = 'משימה לא נמצאה';
+            return next();
+        }
+        req.task_data = tasks[0];
+        next();
+    });
+}
+
+async function UpdateTask(req, res, next) {
+    let description = req.body.description;
+    let target_date = req.body.target_date;
+    let category_id = req.body.category_id;
+    
+    if (!description || !target_date || !category_id) {
+        req.error = 'נא למלא את כל השדות';
+        return next();
+    }
+    
+    if (description.length > 200) {
+        req.error = 'תיאור המשימה לא יכול להכיל יותר מ-200 תווים';
+        return next();
+    }
+    
+    let cleanDescription = global.addSlashes(description);
+    
+    let query = "UPDATE tasks SET description = '" + cleanDescription + "', target_date = '" + target_date + "', category_id = " + category_id + " WHERE id = " + req.params.id + " AND user_id = " + req.user.userId;
+    global.db_pool.execute(query, (err) => {
+        if (err) {
+            console.error(err);
+            req.error = 'שגיאה בעדכון המשימה';
+        }
+        next();
+    });
+}
+
 module.exports = {
     GetAllTasks,
     AddTask,
-    ToggleTask
+    ToggleTask,
+    DeleteTask,
+    GetTaskById,
+    UpdateTask
 }; 

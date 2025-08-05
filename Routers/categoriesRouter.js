@@ -22,4 +22,26 @@ router.post('/delete/:id', [categories_Mid.DeleteCategory], (req, res) => {
     } else {
         res.redirect('/categories');
     }
+});
+
+router.get('/edit/:id', [categories_Mid.GetCategoryById], (req, res) => {
+    if (req.error) {
+        return res.redirect('/categories?message=' + req.error);
+    }
+    res.render('edit-category', { 
+        category: req.category_data, 
+        username: req.user.username,
+        error: null
+    });
+});
+
+router.post('/edit/:id', [categories_Mid.UpdateCategory], (req, res) => {
+    if (req.error) {
+        return res.render('edit-category', { 
+            category: req.body, 
+            username: req.user.username,
+            error: req.error
+        });
+    }
+    res.redirect('/categories?message=הקטגוריה עודכנה בהצלחה');
 }); 

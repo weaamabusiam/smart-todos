@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>משימה חדשה - מנהל משימות</title>
+    <title>עריכת משימה - מנהל משימות</title>
     <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
     <nav class="navbar">
         <div class="navbar-content">
-            <div class="navbar-brand">מנהל משימות</div>
+            <div class="navbar-brand">מנהל משימות - <%= username %></div>
             <div class="navbar-nav">
                 <a href="/tasks">משימות</a>
                 <a href="/categories">קטגוריות</a>
@@ -20,39 +20,38 @@
 
     <div class="container">
         <div class="main-card">
-            <h2>יצירת משימה חדשה</h2>
+            <h2>עריכת משימה</h2>
             
             <% if (error) { %>
                 <div class="error"><%= error %></div>
             <% } %>
             
-            <form method="POST" action="/tasks/new">
+            <form method="POST" action="/tasks/edit/<%= task.id %>">
                 <div class="form-group">
-                    <label for="description">תיאור המשימה (עד 200 תווים):</label>
-                    <textarea id="description" name="description" maxlength="200" rows="3" required 
-                              placeholder="הכנס את תיאור המשימה כאן..."></textarea>
-                    <small style="color: #666;">תווים נותרים: <span id="charCount">200</span></small>
+                    <label for="description">תיאור המשימה:</label>
+                    <textarea id="description" name="description" required maxlength="200" rows="3"><%= task.description %></textarea>
                 </div>
                 
                 <div class="form-group">
                     <label for="target_date">תאריך יעד:</label>
-                    <input type="date" id="target_date" name="target_date" required 
-                           min="<%= new Date().toISOString().split('T')[0] %>">
+                    <input type="date" id="target_date" name="target_date" value="<%= task.target_date %>" required>
                 </div>
                 
                 <div class="form-group">
                     <label for="category_id">קטגוריה:</label>
                     <select id="category_id" name="category_id" required>
-                        <option value="">בחר קטגוריה</option>
                         <% for (var i = 0; i < categories.length; i++) { %>
-                            <option value="<%= categories[i].id %>"><%= categories[i].name %></option>
+                            <option value="<%= categories[i].id %>" 
+                                    <% if (task.category_id == categories[i].id) { %>selected<% } %>>
+                                <%= categories[i].name %>
+                            </option>
                         <% } %>
                     </select>
                 </div>
                 
-                <div style="display: flex; gap: 15px;">
-                    <button type="submit" class="btn">צור משימה</button>
-                    <a href="/tasks" class="btn" style="background: #6c757d;">ביטול</a>
+                <div style="display: flex; gap: 15px; margin-top: 20px;">
+                    <button type="submit" class="btn btn-success">שמור שינויים</button>
+                    <a href="/tasks" class="btn" style="text-decoration: none;">ביטול</a>
                 </div>
             </form>
         </div>
